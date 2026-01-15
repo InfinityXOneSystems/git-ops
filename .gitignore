@@ -6,6 +6,7 @@
 !*.yml
 !*.yaml
 !*.json
+!docs/
 
 # Dependencies
 node_modules/
