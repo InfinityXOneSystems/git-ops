@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Build Release Artifacts
+      run: |
+        echo "Building release artifacts..."
+        mkdir -p release
+        # Add your build commands here
+    
+    - name: Generate Changelog
+      id: changelog
+      run: |
+        echo "## What's Changed" > RELEASE_NOTES.md
+        git log $(git describe --tags --abbrev=0 HEAD^)..HEAD --pretty=format:"* %s (%h)" >> RELEASE_NOTES.md
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        body_path: RELEASE_NOTES.md
+        files: |
+          release/*
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

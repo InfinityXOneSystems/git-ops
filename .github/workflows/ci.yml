@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Run tests
+      run: |
+        echo "Running tests..."
+        # Add your test commands here
+    
+    - name: Build project
+      run: |
+        echo "Building project..."
+        # Add your build commands here
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      if: success()
+      with:
+        name: build-artifacts
+        path: |
+          dist/
+          build/
+        retention-days: 30
